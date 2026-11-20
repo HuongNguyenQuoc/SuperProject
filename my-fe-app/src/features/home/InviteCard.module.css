@@ -1,0 +1,23 @@
+.card {
+  flex: 0 0 300px; min-width: 0; border-radius: 150px 150px 22px 22px; padding: 9px;
+  background: linear-gradient(125deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,.2) 55%, rgba(255,255,255,.32) 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%) brightness(1.06);
+  backdrop-filter: blur(18px) saturate(140%) brightness(1.06);
+}
+.inner {
+  border: 1px solid rgba(255,255,255,.7); border-radius: 141px 141px 15px 15px;
+  padding: 52px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;
+}
+.mark { color: var(--cd-rose); }
+.kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cd-ink-soft); }
+.names { font: italic 600 36px/1.02 var(--cd-font-display); color: var(--cd-ink); }
+.names span { font-style: normal; font-weight: 500; color: var(--cd-rose); }
+.date { font-size: 14px; font-variant-numeric: tabular-nums; }
+.date strong { font-weight: 600; }
+.place { font-size: 13px; color: var(--cd-ink-soft); }
+.rsvp { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+.tag { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cd-ink-soft); }
+
+@media (max-width: 760px) {
+  .card { display: none; }
+}

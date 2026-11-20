@@ -1,0 +1,31 @@
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 50px; padding: 0 26px; border-radius: 999px;
+  font: 600 15px/1 var(--cd-font-body); text-decoration: none; cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.primary {
+  background: var(--cd-wine); color: #fff; border: 0;
+  box-shadow: 0 16px 32px -16px rgba(91,23,48,.9), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.primary:hover { color: #fff; transform: translateY(-2px); }
+.sm { min-height: 44px; padding: 0 22px; }
+.ghost { min-height: 44px; padding: 0 18px; color: var(--cd-ink); font-weight: 500; background: none; border: 0; }
+.linkU {
+  display: inline-flex; align-items: center; min-height: 44px;
+  color: var(--cd-ink); font-weight: 500; font-size: 15px; text-decoration: underline;
+  text-decoration-color: rgba(156,52,89,.45); text-decoration-thickness: 1px; text-underline-offset: 7px;
+}
+.linkU:hover { color: var(--cd-rose); text-decoration-color: var(--cd-rose); }
+.textBtn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0;
+  background: none; border: 0; cursor: pointer; font: 400 13px/1 var(--cd-font-body); color: var(--cd-muted);
+}
+.textBtn:hover { color: var(--cd-ink); }
+.pill {
+  min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(58,18,32,.22); background: rgba(255,255,255,.28); color: var(--cd-ink);
+  font: 500 14px/1 var(--cd-font-body); transition: background 0.2s ease, color 0.2s ease;
+}
+.pill:hover { background: rgba(255,255,255,.55); }
+.pill[aria-pressed='true'] { background: var(--cd-wine); border-color: var(--cd-wine); color: #fff; }

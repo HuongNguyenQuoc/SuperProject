@@ -1,0 +1,55 @@
+/* =========================================================
+   Chuyển động. Dùng với class .gate đặt trên phần hero.
+   data-stage="intro": chữ đang ẩn (video đang chạy)
+   data-stage="in":    chữ hiện (video xong)
+   ========================================================= */
+.gate[data-stage='intro'] .rv,
+.gate[data-stage='intro'] .navRv,
+.gate[data-stage='intro'] .ln {
+  opacity: 0; pointer-events: none;
+}
+.gate[data-stage='intro'] .rv { transform: translateY(24px); filter: blur(10px); }
+.gate[data-stage='intro'] .navRv { transform: translateY(-16px); }
+.gate[data-stage='intro'] .ln { transform: translateY(16px); filter: blur(6px); }
+
+.rv { transition: opacity 1.2s var(--cd-ease), transform 1.2s var(--cd-ease), filter 1.2s var(--cd-ease); }
+.navRv { transition: opacity 1s ease, transform 1s var(--cd-ease); }
+.ln { transition: opacity 1s ease, transform 1s var(--cd-ease), filter 1s ease; }
+
+.gate[data-stage='in'] .rv,
+.gate[data-stage='in'] .navRv,
+.gate[data-stage='in'] .ln { opacity: 1; transform: none; filter: none; }
+
+.d4 { transition-delay: 1s; }
+.l1 { transition-delay: 0.3s; }
+.l2 { transition-delay: 0.45s; }
+.l3 { transition-delay: 0.65s; }
+.l4 { transition-delay: 0.8s; }
+.l5 { transition-delay: 1.2s; }
+
+/* Chữ mở đầu: chỉ bật transition khi đã có giai đoạn "in", tránh giật lúc tải */
+.gate[data-stage='intro'] .introUi { opacity: 1; }
+.gate[data-stage='in'] .introUi { opacity: 0; pointer-events: none; }
+.introUi { transition: opacity 0.5s ease; }
+
+/* ---------- Cuộn: gắn với thanh cuộn (Chrome, Edge, Safari 26+) ---------- */
+@keyframes heroPar { from { transform: none; } to { transform: translateY(240px) scale(1.08); } }
+@keyframes heroOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-80px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(56px); } to { opacity: 1; transform: none; } }
+@keyframes driftUp { from { transform: translateY(80px); } to { transform: translateY(-80px); } }
+@keyframes driftDown { from { transform: translateY(-50px); } to { transform: translateY(50px); } }
+@keyframes ctaZoom { from { transform: scale(1.14); } to { transform: scale(1); } }
+
+@supports (animation-timeline: scroll()) {
+  .heroMedia { animation: heroPar linear both; animation-timeline: scroll(root); animation-range: 0px 920px; }
+  .heroCopy { animation: heroOut linear both; animation-timeline: scroll(root); animation-range: 0px 640px; }
+  .sdRise { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  .sdUp { animation: driftUp linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  .sdDown { animation: driftDown linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  .ctaImg { animation: ctaZoom linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rv, .navRv, .ln, .introUi { transition: none !important; }
+  .heroMedia, .heroCopy, .sdRise, .sdUp, .sdDown, .ctaImg { animation: none !important; }
+}

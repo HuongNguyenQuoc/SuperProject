@@ -1,3 +1,22 @@
+/* Biến màu và phông dùng chung cho toàn site (tiền tố --cd-) */
+:root {
+  --cd-blush: #f6e8ea;
+  --cd-blush-0: rgba(246, 232, 234, 0);
+  --cd-ink: #3a1220;
+  --cd-ink-soft: #5e2c3b;
+  --cd-muted: #7a4555;
+  --cd-rose: #9c3459;
+  --cd-wine: #5b1730;          /* màu nút chính: đổi ở đây */
+  --cd-line: rgba(58, 18, 32, 0.14);
+  --cd-hero-fallback: #8a2846;
+  --cd-font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --cd-font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cd-wrap: 1240px;
+  --cd-gutter: 24px;
+  --cd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  color-scheme: light;
+}
+
 html,
 body,
 #root {
@@ -6,6 +25,20 @@ body,
 }
 
 body {
+  background: var(--cd-blush);
+  color: var(--cd-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--cd-ink); }
+a:hover { color: var(--cd-rose); }
+a:focus-visible,
+button:focus-visible { outline: 2px solid var(--cd-wine); outline-offset: 3px; }
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
 }

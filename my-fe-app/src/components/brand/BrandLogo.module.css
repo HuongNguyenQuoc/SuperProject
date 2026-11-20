@@ -1,0 +1,9 @@
+.brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--cd-ink); }
+.mark { color: var(--cd-wine); flex: none; }
+.rose .mark { color: var(--cd-rose); }
+.name { font: 600 30px/1 var(--cd-font-display); letter-spacing: 0.02em; }
+
+@media (max-width: 760px) {
+  .name { font-size: 26px; }
+  .mark { width: 30px; height: 20px; }
+}

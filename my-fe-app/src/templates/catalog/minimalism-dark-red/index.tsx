@@ -1,6 +1,5 @@
 import type { TemplateModule } from '../../types';
-import MinimalismDarkRedInvitation from '../../../pages/minimalism-dark-red/MinimalismDarkRedInvitation';
-
+import MinimalismDarkRedInvitation from './Invitation';
 // Mẫu này có trang riêng toàn màn hình trong src/pages/minimalism-dark-red/.
 // Modal chỉ hiển thị thông tin, còn nội dung thiệp nằm trong trang đó.
 const template: TemplateModule = {

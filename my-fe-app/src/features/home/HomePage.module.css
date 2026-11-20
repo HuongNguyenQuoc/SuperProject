@@ -1,0 +1,2 @@
+.page { overflow-x: hidden; }
+@supports (overflow: clip) { .page { overflow-x: clip; } }
