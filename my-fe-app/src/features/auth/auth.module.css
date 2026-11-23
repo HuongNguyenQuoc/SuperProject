@@ -1,0 +1,46 @@
+.body { padding: 40px 36px 36px; }
+.title { font: 600 40px/1.04 var(--cd-font-display); text-wrap: balance; }
+.subtitle { margin-top: 10px; font-size: 15px; line-height: 1.6; color: var(--cd-ink-soft); }
+
+.form { display: flex; flex-direction: column; gap: 16px; margin-top: 26px; }
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; color: var(--cd-ink); }
+.field input {
+  min-height: 48px; padding: 0 16px; border-radius: 14px;
+  border: 1px solid rgba(58,18,32,.22); background: rgba(255,255,255,.55);
+  font: 400 16px/1 var(--cd-font-body); color: var(--cd-ink);
+}
+.field input:focus { outline: 2px solid var(--cd-wine); outline-offset: 1px; }
+.error { font-size: 14px; color: var(--cd-rose); }
+.submit { width: 100%; margin-top: 6px; }
+.submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.divider {
+  display: flex; align-items: center; gap: 14px; margin: 24px 0 18px;
+  font-size: 13px; color: var(--cd-muted);
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--cd-line); }
+
+.social { display: flex; flex-direction: column; gap: 10px; }
+.socialBtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(58,18,32,.22); background: rgba(255,255,255,.4); color: var(--cd-ink);
+  font: 500 15px/1 var(--cd-font-body); transition: background 0.2s ease;
+}
+.socialBtn:hover { background: rgba(255,255,255,.7); }
+.socialBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.switch { margin-top: 24px; text-align: center; font-size: 15px; color: var(--cd-ink-soft); }
+.linkBtn {
+  border: 0; background: none; padding: 0; cursor: pointer;
+  color: var(--cd-ink); font: 600 15px/1 var(--cd-font-body);
+  text-decoration: underline; text-underline-offset: 4px;
+}
+/* Ẩn thanh cuộn của modal, nội dung vẫn cuộn được bằng chuột và bàn phím */
+.inner {
+  scrollbar-width: none;
+}
+.inner::-webkit-scrollbar {
+  display: none;
+}
+.linkBtn:hover { color: var(--cd-rose); }

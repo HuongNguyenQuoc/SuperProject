@@ -42,3 +42,24 @@ h3,
 p {
   margin: 0;
 }
+
+/* Modal của Mantine: không cuộn nên ẩn luôn thanh cuộn của lớp bao ngoài */
+.mantine-Modal-inner {
+  overflow-y: hidden !important;
+  scrollbar-width: none;
+}
+.mantine-Modal-inner::-webkit-scrollbar {
+  display: none;
+}
+/* Modal của Mantine: không cuộn nên ẩn thanh cuộn ở mọi lớp bao ngoài */
+.mantine-Modal-root,
+.mantine-Modal-overlay,
+.mantine-Modal-inner {
+  overflow: hidden !important;
+  scrollbar-width: none;
+}
+.mantine-Modal-root::-webkit-scrollbar,
+.mantine-Modal-overlay::-webkit-scrollbar,
+.mantine-Modal-inner::-webkit-scrollbar {
+  display: none;
+}

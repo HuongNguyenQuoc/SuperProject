@@ -1,0 +1,8 @@
+.page { padding: 160px var(--cd-gutter) 160px; }
+.title { font: 600 54px/1.04 var(--cd-font-display); }
+.text { margin-top: 16px; font-size: 16px; line-height: 1.7; color: var(--cd-ink-soft); }
+
+@media (max-width: 760px) {
+  .page { padding: 120px var(--cd-gutter) 120px; }
+  .title { font-size: 40px; }
+}
