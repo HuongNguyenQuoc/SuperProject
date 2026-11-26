@@ -1,10 +1,12 @@
-import { HomePage } from '../features/home/HomePage';
+import { HomePage } from '../pages/home/HomePage';
 import { LoginRoute, RegisterRoute } from '../features/auth/AuthGuards';
-import { CreateInvitationPage } from '../features/create/CreateInvitationPage';
-import { TemplatesPage } from '../features/templates/TemplatesPage';
-import { TemplatePreviewPage } from '../features/templates/TemplatePreviewPage';
-import { TemplateDemoPage } from '../features/templates/TemplateDemoPage';
-import { AccountPage } from '../features/account/AccountPage';
+import { CreateInvitationPage } from '../pages/create/CreateInvitationPage';
+import { TemplatesPage } from '../pages/templates/TemplatesPage';
+import { TemplatePreviewPage } from '../pages/templates/TemplatePreviewPage';
+import { TemplateDemoPage } from '../pages/templates/TemplateDemoPage';
+import { AccountPage } from '../pages/account/AccountPage';
+import { InvitationsPage } from '../pages/invitations/InvitationsPage';
+import { InvitationEditPage } from '../pages/invitations/InvitationEditPage';
 import { ROUTES } from '../config/site';
 import type { AppRoute } from './types';
 
@@ -18,6 +20,8 @@ export const routes: AppRoute[] = [
   { key: 'account', path: ROUTES.account, component: AccountPage, layout: 'public', auth: true },
   // ----- Bọc PublicLayout (header + footer) -----
   { key: 'templates', path: ROUTES.templates, component: TemplatesPage, layout: 'public' },
-  { key: 'templateDetail', path: `${ROUTES.templates}/:slug`, component: TemplatePreviewPage, layout: 'public' },
+  { key: 'templateDetail', path: `${ROUTES.templates}/:key`, component: TemplatePreviewPage, layout: 'public' },
   { key: 'create', path: ROUTES.create, component: CreateInvitationPage, layout: 'public', auth: true },
+  { key: 'invitations', path: ROUTES.invitations, component: InvitationsPage, layout: 'public', auth: true },
+  { key: 'invitationEdit', path: `${ROUTES.invitations}/:id`, component: InvitationEditPage, layout: 'public', auth: true },
 ];

@@ -2,7 +2,7 @@ import { Modal } from '@mantine/core';
 import { useAuth } from './AuthContext';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
-import classes from './AuthModal.module.css';
+
 // Modal đăng nhập/đăng ký dùng chung. Mở từ bất kỳ đâu bằng useAuth().openAuth
 export function AuthModal() {
     const { authMode, closeAuth, switchAuth } = useAuth();

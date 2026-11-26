@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { HOME_MEDIA, ROUTES } from '../../config/site';
 import { SiteHeader } from '../../components/layout/SiteHeader';
 import { HERO_CONTENT } from './home.content';
-import { InviteCard } from './InviteCard';
+
 import { useHeroIntro } from './useHeroIntro';
-import glass from '../../styles/glass.module.css';
+
 import buttons from '../../styles/buttons.module.css';
 import layout from '../../styles/layout.module.css';
 import motion from '../../styles/motion.module.css';

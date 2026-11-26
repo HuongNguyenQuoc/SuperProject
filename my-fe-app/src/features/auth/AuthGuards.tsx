@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
 import { APP_CONFIG } from '../../config/app.config';
 import { useAuth, type AuthMode } from './AuthContext';
 
@@ -23,17 +24,32 @@ export function RegisterRoute() {
   return <AuthRoute mode="register" />;
 }
 
-// Trang cần đăng nhập: đợi khôi phục phiên xong, chưa có user thì mở modal và quay lại đúng trang này
+// Trang cần đăng nhập. Chưa đăng nhập thì ở lại đúng trang này và hiện nút đăng nhập,
+// không chuyển về trang chủ. Sau khi đăng nhập xong, user có giá trị và trang tự hiện nội dung.
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { user, checking, requireAuth } = useAuth();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const { user, checking, openAuth } = useAuth();
 
-  useEffect(() => {
-    if (!checking && !user) requireAuth(() => navigate(pathname));
-  }, [user, checking, requireAuth, navigate, pathname]);
-
+  // Đang khôi phục phiên lúc tải trang: chưa biết có đăng nhập hay không
   if (checking) return null;
-  if (!user) return <Navigate to={APP_CONFIG.unAuthenticatedEntryPath} replace />;
+
+  if (!user) {
+    return (
+      <Container size="xs" py={80}>
+        <Stack align="center" gap="md" ta="center">
+          <Title order={2}>Cần đăng nhập</Title>
+          <Text c="dimmed">Đăng nhập để tạo thiệp và xem các thiệp của bạn.</Text>
+          <Group mt="sm">
+            <Button color="pink" radius="md" onClick={() => openAuth('login')}>
+              Đăng nhập
+            </Button>
+            <Button variant="outline" color="dark" radius="md" onClick={() => openAuth('register')}>
+              Tạo tài khoản
+            </Button>
+          </Group>
+        </Stack>
+      </Container>
+    );
+  }
+
   return <>{children}</>;
 }

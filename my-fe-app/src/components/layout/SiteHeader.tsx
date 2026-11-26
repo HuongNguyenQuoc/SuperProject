@@ -71,6 +71,11 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
                 {item.label}
               </NavItem>
             ))}
+            {user && (
+              <NavItem to={ROUTES.invitations} className={styles.navLink}>
+                Thiệp của tôi
+              </NavItem>
+            )}
           </div>
 
           <div className={styles.actions}>
@@ -81,11 +86,10 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
                 Đăng nhập
               </NavItem>
             )}
-            {!user && (
-              <NavItem to={ROUTES.create} className={`${buttons.btn} ${buttons.primary} ${buttons.sm}`}>
-                Tạo thiệp
-              </NavItem>
-            )}
+            {/* Tạo thiệp luôn bắt đầu từ trang mẫu, vì phải chọn mẫu trước */}
+            <NavItem to={ROUTES.templates} className={`${buttons.btn} ${buttons.primary} ${buttons.sm}`}>
+              Tạo thiệp
+            </NavItem>
             <button
               ref={toggleRef}
               type="button"
@@ -112,6 +116,12 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
 
             {user ? (
               <>
+                <NavItem to={ROUTES.invitations} className={styles.mobileLink} onClick={close}>
+                  Thiệp của tôi
+                </NavItem>
+                <NavItem to={ROUTES.templates} className={styles.mobileLink} onClick={close}>
+                  Tạo thiệp
+                </NavItem>
                 <NavItem to={ROUTES.account} className={styles.mobileLink} onClick={close}>
                   Tài khoản
                 </NavItem>
@@ -120,9 +130,14 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
                 </button>
               </>
             ) : (
-              <NavItem to={ROUTES.login} className={styles.mobileLink} onClick={close}>
-                Đăng nhập
-              </NavItem>
+              <>
+                <NavItem to={ROUTES.login} className={styles.mobileLink} onClick={close}>
+                  Đăng nhập
+                </NavItem>
+                <NavItem to={ROUTES.templates} className={styles.mobileLink} onClick={close}>
+                  Tạo thiệp
+                </NavItem>
+              </>
             )}
           </div>
         )}

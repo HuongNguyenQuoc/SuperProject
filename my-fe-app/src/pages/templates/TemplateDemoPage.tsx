@@ -1,8 +1,8 @@
 import { Button, Group } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { getTemplate } from '../../templates/registry';
-import { SAMPLE_DATA } from '../../templates/sampleData';
+import { getTemplate } from '../../designs/registry';
+import { SAMPLE_DATA } from '../../designs/sampleData';
 
 /**
  * Trang demo toàn màn hình, nằm ngoài SiteLayout nên không có header của site.

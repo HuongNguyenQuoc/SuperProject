@@ -65,17 +65,41 @@ export function refreshSession(): Promise<boolean> {
   return refreshing;
 }
 
+const FALLBACK_MESSAGE = 'Có lỗi xảy ra, thử lại sau.';
+
+// FastAPI trả 422 theo dạng { detail: [{ loc, msg, type }] }; các lỗi khác là { error: {...} }
+type FastApiIssue = { loc?: (string | number)[]; msg?: string; type?: string };
+
 async function readError(res: Response): Promise<ApiError> {
   try {
-    const body = (await res.json()) as { error?: { code?: string; message?: string; details?: ApiErrorDetail[] } };
-    return new ApiError(
-      res.status,
-      body.error?.code ?? 'unknown_error',
-      body.error?.message ?? 'Có lỗi xảy ra, thử lại sau.',
-      body.error?.details ?? [],
-    );
+    const body = (await res.json()) as {
+      error?: { code?: string; message?: string; details?: ApiErrorDetail[] };
+      detail?: unknown;
+    };
+
+    if (body.error) {
+      return new ApiError(
+        res.status,
+        body.error.code ?? 'unknown_error',
+        body.error.message ?? FALLBACK_MESSAGE,
+        body.error.details ?? [],
+      );
+    }
+
+    if (Array.isArray(body.detail)) {
+      const details: ApiErrorDetail[] = (body.detail as FastApiIssue[]).map((issue) => ({
+        field: (issue.loc ?? []).filter((part) => part !== 'body').join('.'),
+        code: issue.type ?? 'invalid',
+        message: issue.msg ?? '',
+      }));
+      const first = details[0];
+      const message = first?.field ? `Dữ liệu chưa hợp lệ: ${first.field}.` : FALLBACK_MESSAGE;
+      return new ApiError(res.status, 'validation_error', message, details);
+    }
+
+    return new ApiError(res.status, 'unknown_error', FALLBACK_MESSAGE);
   } catch {
-    return new ApiError(res.status, 'unknown_error', 'Có lỗi xảy ra, thử lại sau.');
+    return new ApiError(res.status, 'unknown_error', FALLBACK_MESSAGE);
   }
 }
 

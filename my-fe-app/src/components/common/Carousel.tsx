@@ -232,7 +232,7 @@ const pose = (index: number, position: number, s: Settings) => {
 
 const keyOf = (item: CarouselEntry, index: number) => {
   if (isValidElement(item)) return item.key ?? index;
-  if (typeof item === 'object' && item !== null && item.id != null) return item.id;
+  if (typeof item === 'object' && item !== null && (item as CarouselItem).id != null) return (item as CarouselItem).id;
   return index;
 };
 
@@ -255,7 +255,7 @@ const Card = ({ item, round, compact }: { item: CarouselEntry; round: boolean; c
     icon: mark,
     title,
     description
-  }: CarouselItem = typeof item === 'string' ? { image: item } : (item ?? {});
+  }: CarouselItem = typeof item === 'string' ? { image: item } : ((item as CarouselItem | undefined) ?? {});
   const text = Boolean(title || description);
   return (
     <div className={`carousel-card${image ? ' has-image' : ''}${round ? ' is-round' : ''}`}>

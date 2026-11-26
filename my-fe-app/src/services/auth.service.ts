@@ -30,5 +30,5 @@ export const authService = {
   // Đổi refresh cookie lấy access token mới (dùng khi tải lại trang)
   refresh: refreshSession,
 
-  me: (signal: AbortSignal) => request<UserDto>('/me'),
+  me: (signal?: AbortSignal) => request<UserDto>('/me', { signal }),
 };

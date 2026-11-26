@@ -17,11 +17,9 @@ import App from './App';
 import '@mantine/dates/styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <MantineProvider theme={theme} defaultColorScheme="light">
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </MantineProvider>
-  </React.StrictMode>,
+  <MantineProvider theme={theme} defaultColorScheme="light">
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </MantineProvider>
 );

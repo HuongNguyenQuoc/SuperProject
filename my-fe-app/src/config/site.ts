@@ -10,8 +10,9 @@ export const ROUTES = {
   register: "/dang-ky",
   create: "/tao-thiep",
   howTo: "/huong-dan",
-  account: '/tai-khoan',
+  account: "/tai-khoan",
   contact: "/lien-he",
+  invitations: "/thiep-cua-toi",
 } as const;
 
 export const MAIN_NAV = [

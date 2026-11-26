@@ -1,7 +1,0 @@
-/* Ẩn thanh cuộn của modal, nội dung vẫn cuộn được bằng chuột và bàn phím */
-.inner {
-  scrollbar-width: none;
-}
-.inner::-webkit-scrollbar {
-  display: none;
-}
