@@ -1,39 +1,67 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { authService, type LoginBody, type RegisterBody, type UserDto } from '../../services/auth.service';
+import { setAccessToken, setSessionExpiredHandler } from '../../services/http';
 
-export type SocialProvider = 'google' | 'facebook';
 export type AuthMode = 'login' | 'register';
+export type AuthUser = { id: string; name: string; email: string };
 
-export type AuthUser = {
-  name: string;
-  email: string;
-  provider: 'email' | SocialProvider;
-};
+function toUser(dto: UserDto): AuthUser {
+  return {
+    id: dto.id,
+    email: dto.email,
+    name: dto.full_name.trim() || dto.email.split('@')[0],
+  };
+}
 
 type AuthContextValue = {
   user: AuthUser | null;
+  // true khi đang khôi phục phiên lúc tải trang: chưa biết có đăng nhập hay không
+  checking: boolean;
   authMode: AuthMode | null;
   openAuth: (mode?: AuthMode, onSuccess?: () => void) => void;
   switchAuth: (mode: AuthMode) => void;
   closeAuth: () => void;
   requireAuth: (action: () => void) => void;
-  login: (email: string, password: string) => Promise<void>;
-  loginWithSocial: (provider: SocialProvider) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  login: (body: LoginBody) => Promise<void>;
+  register: (body: RegisterBody) => Promise<void>;
+  logout: () => Promise<void>;
 };
-
-// Bản giả lập: chưa có backend, trạng thái chỉ giữ trong bộ nhớ (tải lại trang là mất).
-// Khi có Supabase hoặc Firebase, thay phần thân các hàm bằng lời gọi thật.
-const fakeDelay = () => new Promise((resolve) => setTimeout(resolve, 400));
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [checking, setChecking] = useState(true);
   const [authMode, setAuthMode] = useState<AuthMode | null>(null);
   // Hành động cần làm sau khi đăng nhập xong, ví dụ đi tới trang tạo thiệp
   const afterAuthRef = useRef<(() => void) | null>(null);
+  const restoredRef = useRef(false);
+
+  // Khôi phục phiên khi tải lại trang: đổi refresh cookie lấy access token, rồi lấy thông tin tài khoản
+  useEffect(() => {
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    (async () => {
+      try {
+        const ok = await authService.refresh();
+        if (ok) {
+          const { data } = await authService.me();
+          setUser(toUser(data));
+        }
+      } catch {
+        setAccessToken(null);
+      } finally {
+        setChecking(false);
+      }
+    })();
+  }, []);
+
+  // Khi phiên hết hạn hẳn (refresh cũng thất bại), đưa về trạng thái chưa đăng nhập
+  useEffect(() => {
+    setSessionExpiredHandler(() => setUser(null));
+    return () => setSessionExpiredHandler(null);
+  }, []);
 
   const openAuth = useCallback((mode: AuthMode = 'login', onSuccess?: () => void) => {
     afterAuthRef.current = onSuccess ?? null;
@@ -63,38 +91,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [user, openAuth],
   );
 
+  // Backend đã trả sẵn user trong response, không cần gọi /me thêm
   const login = useCallback(
-    async (email: string, _password: string) => {
-      await fakeDelay();
-      setUser({ name: email.split('@')[0], email, provider: 'email' });
-      finishAuth();
-    },
-    [finishAuth],
-  );
-
-  const loginWithSocial = useCallback(
-    async (provider: SocialProvider) => {
-      await fakeDelay();
-      setUser({ name: 'Khách mới', email: `demo@${provider}.local`, provider });
+    async (body: LoginBody) => {
+      const { data } = await authService.login(body);
+      setAccessToken(data.access_token);
+      setUser(toUser(data.user));
       finishAuth();
     },
     [finishAuth],
   );
 
   const register = useCallback(
-    async (name: string, email: string, _password: string) => {
-      await fakeDelay();
-      setUser({ name, email, provider: 'email' });
+    async (body: RegisterBody) => {
+      const { data } = await authService.register(body);
+      setAccessToken(data.access_token);
+      setUser(toUser(data.user));
       finishAuth();
     },
     [finishAuth],
   );
 
-  const logout = useCallback(() => setUser(null), []);
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // Dù máy chủ lỗi vẫn đăng xuất phía máy này
+    }
+    setAccessToken(null);
+    setUser(null);
+  }, []);
 
   const value = useMemo(
-    () => ({ user, authMode, openAuth, switchAuth, closeAuth, requireAuth, login, loginWithSocial, register, logout }),
-    [user, authMode, openAuth, switchAuth, closeAuth, requireAuth, login, loginWithSocial, register, logout],
+    () => ({
+      user,
+      checking,
+      authMode,
+      openAuth,
+      switchAuth,
+      closeAuth,
+      requireAuth,
+      login,
+      register,
+      logout,
+    }),
+    [user, checking, authMode, openAuth, switchAuth, closeAuth, requireAuth, login, register, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

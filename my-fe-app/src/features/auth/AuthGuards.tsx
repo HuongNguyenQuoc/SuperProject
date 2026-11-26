@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../config/site';
+import { APP_CONFIG } from '../../config/app.config';
 import { useAuth, type AuthMode } from './AuthContext';
 
-// /dang-nhap và /dang-ky: mở modal rồi quay về trang chủ
+// Mở modal theo chế độ, rồi chuyển về trang chưa đăng nhập
 export function AuthRoute({ mode }: { mode: AuthMode }) {
   const { openAuth } = useAuth();
 
@@ -12,19 +12,28 @@ export function AuthRoute({ mode }: { mode: AuthMode }) {
     openAuth(mode);
   }, [mode, openAuth]);
 
-  return <Navigate to={ROUTES.home} replace />;
+  return <Navigate to={APP_CONFIG.unAuthenticatedEntryPath} replace />;
 }
 
-// Trang cần đăng nhập: chưa có user thì mở modal, đăng nhập xong quay lại đúng trang này
+export function LoginRoute() {
+  return <AuthRoute mode="login" />;
+}
+
+export function RegisterRoute() {
+  return <AuthRoute mode="register" />;
+}
+
+// Trang cần đăng nhập: đợi khôi phục phiên xong, chưa có user thì mở modal và quay lại đúng trang này
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { user, requireAuth } = useAuth();
+  const { user, checking, requireAuth } = useAuth();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) requireAuth(() => navigate(pathname));
-  }, [user, requireAuth, navigate, pathname]);
+    if (!checking && !user) requireAuth(() => navigate(pathname));
+  }, [user, checking, requireAuth, navigate, pathname]);
 
-  if (!user) return <Navigate to={ROUTES.home} replace />;
+  if (checking) return null;
+  if (!user) return <Navigate to={APP_CONFIG.unAuthenticatedEntryPath} replace />;
   return <>{children}</>;
 }

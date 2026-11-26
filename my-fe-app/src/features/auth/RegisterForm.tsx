@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useAuth } from './AuthContext';
-import { SocialButtons } from './SocialButtons';
+import { useCallApi } from '../../hooks/useCallApi';
+import { getErrorMessage } from '../../services/http';
+import type { RegisterBody } from '../../services/auth.service';
 import buttons from '../../styles/buttons.module.css';
 import styles from './auth.module.css';
 
@@ -9,20 +11,19 @@ type Props = { onSwitch: () => void };
 
 export function RegisterForm({ onSwitch }: Props) {
   const { register } = useAuth();
+  const submit = useCallApi((_signal, body: RegisterBody) => register(body));
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [submitting, setSubmitting] = useState(false);
 
   const mismatch = confirm.length > 0 && confirm !== password;
 
-  // register() tự đóng modal khi xong
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // register() tự đóng modal khi thành công
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (mismatch) return;
-    setSubmitting(true);
-    await register(name, email, password);
+    void submit.run({ full_name: name.trim(), email, password });
   };
 
   return (
@@ -32,7 +33,7 @@ export function RegisterForm({ onSwitch }: Props) {
 
       <form className={styles.form} onSubmit={onSubmit}>
         <label className={styles.field}>
-          <span>Tên hiển thị</span>
+          <span>Họ và tên</span>
           <input type="text" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
         </label>
         <label className={styles.field}>
@@ -48,13 +49,11 @@ export function RegisterForm({ onSwitch }: Props) {
           <input type="password" required autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         </label>
         {mismatch && <p className={styles.error}>Mật khẩu nhập lại chưa khớp.</p>}
-        <button type="submit" className={`${buttons.btn} ${buttons.primary} ${styles.submit}`} disabled={submitting || mismatch}>
-          {submitting ? 'Đang tạo tài khoản...' : 'Đăng ký'}
+        {getErrorMessage(submit.error) && <p className={styles.error}>{getErrorMessage(submit.error)}</p>}
+        <button type="submit" className={`${buttons.btn} ${buttons.primary} ${styles.submit}`} disabled={submit.loading || mismatch}>
+          {submit.loading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
         </button>
       </form>
-
-      <div className={styles.divider}>hoặc</div>
-      <SocialButtons />
 
       <p className={styles.switch}>
         Đã có tài khoản?{' '}

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useAuth } from './AuthContext';
-import { SocialButtons } from './SocialButtons';
+import { useCallApi } from '../../hooks/useCallApi';
+import { getErrorMessage } from '../../services/http';
+import type { LoginBody } from '../../services/auth.service';
 import buttons from '../../styles/buttons.module.css';
 import styles from './auth.module.css';
 
@@ -9,15 +11,14 @@ type Props = { onSwitch: () => void };
 
 export function LoginForm({ onSwitch }: Props) {
   const { login } = useAuth();
+  const submit = useCallApi((_signal, body: LoginBody) => login(body));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
 
-  // login() tự đóng modal khi xong
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // login() tự đóng modal khi thành công
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
-    await login(email, password);
+    void submit.run({ email, password });
   };
 
   return (
@@ -34,13 +35,11 @@ export function LoginForm({ onSwitch }: Props) {
           <span>Mật khẩu</span>
           <input type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
-        <button type="submit" className={`${buttons.btn} ${buttons.primary} ${styles.submit}`} disabled={submitting}>
-          {submitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+        {getErrorMessage(submit.error) && <p className={styles.error}>{getErrorMessage(submit.error)}</p>}
+        <button type="submit" className={`${buttons.btn} ${buttons.primary} ${styles.submit}`} disabled={submit.loading}>
+          {submit.loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
         </button>
       </form>
-
-      <div className={styles.divider}>hoặc</div>
-      <SocialButtons />
 
       <p className={styles.switch}>
         Chưa có tài khoản?{' '}

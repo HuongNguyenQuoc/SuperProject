@@ -7,6 +7,8 @@ import glass from '../../styles/glass.module.css';
 import buttons from '../../styles/buttons.module.css';
 import layout from '../../styles/layout.module.css';
 import styles from './SiteHeader.module.css';
+import { UserMenu } from '../../features/auth/UserMenu';
+import { useAuth } from '../../features/auth/AuthContext';
 
 type Props = {
   // overlay: nằm đè lên hero (trang chủ). page: nằm trên cùng, dính khi cuộn (các trang khác).
@@ -22,6 +24,7 @@ function NavItem({ to, className, children, onClick }: { to: string; className: 
 }
 
 export function SiteHeader({ variant = 'overlay' }: Props) {
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -49,6 +52,11 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
 
   const close = () => setOpen(false);
 
+  const onLogout = () => {
+    close();
+    void logout();
+  };
+
   return (
     <header className={`${styles.header} ${variant === 'overlay' ? styles.overlay : styles.page}`}>
       <div className={`${layout.wrap} ${styles.inner}`}>
@@ -66,12 +74,18 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
           </div>
 
           <div className={styles.actions}>
-            <NavItem to={ROUTES.login} className={`${styles.navLink} ${styles.login}`}>
-              Đăng nhập
-            </NavItem>
-            <NavItem to={ROUTES.create} className={`${buttons.btn} ${buttons.primary} ${buttons.sm}`}>
-              Tạo thiệp
-            </NavItem>
+            {user ? (
+              <UserMenu />
+            ) : (
+              <NavItem to={ROUTES.login} className={`${styles.navLink} ${styles.login}`}>
+                Đăng nhập
+              </NavItem>
+            )}
+            {!user && (
+              <NavItem to={ROUTES.create} className={`${buttons.btn} ${buttons.primary} ${buttons.sm}`}>
+                Tạo thiệp
+              </NavItem>
+            )}
             <button
               ref={toggleRef}
               type="button"
@@ -95,9 +109,21 @@ export function SiteHeader({ variant = 'overlay' }: Props) {
                 {item.label}
               </NavItem>
             ))}
-            <NavItem to={ROUTES.login} className={styles.mobileLink} onClick={close}>
-              Đăng nhập
-            </NavItem>
+
+            {user ? (
+              <>
+                <NavItem to={ROUTES.account} className={styles.mobileLink} onClick={close}>
+                  Tài khoản
+                </NavItem>
+                <button type="button" className={`${styles.mobileLink} ${styles.mobileBtn}`} onClick={onLogout}>
+                  Đăng xuất
+                </button>
+              </>
+            ) : (
+              <NavItem to={ROUTES.login} className={styles.mobileLink} onClick={close}>
+                Đăng nhập
+              </NavItem>
+            )}
           </div>
         )}
       </div>

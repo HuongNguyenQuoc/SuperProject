@@ -1,0 +1,49 @@
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 120px 24px 96px;
+}
+
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(38px, 4vw, 54px);
+  line-height: 1.04;
+  color: var(--cd-ink);
+  margin: 0 0 32px;
+}
+
+.card {
+  background: rgba(255, 250, 251, 0.7);
+  border: 1px solid rgba(58, 18, 32, 0.14);
+  border-radius: 28px;
+  padding: 8px 28px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(58, 18, 32, 0.14);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: var(--cd-muted, #7a4555);
+  font-size: 14px;
+}
+
+.value {
+  color: var(--cd-ink);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all;
+}
+
+.error {
+  color: var(--cd-rose, #9c3459);
+}

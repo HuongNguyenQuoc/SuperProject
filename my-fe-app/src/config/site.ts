@@ -10,6 +10,7 @@ export const ROUTES = {
   register: "/dang-ky",
   create: "/tao-thiep",
   howTo: "/huong-dan",
+  account: '/tai-khoan',
   contact: "/lien-he",
 } as const;
 
